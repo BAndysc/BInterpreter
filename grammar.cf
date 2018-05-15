@@ -1,0 +1,125 @@
+-- gramatyka bazuje na gramatyce języka Latte
+-- programs ------------------------------------------------
+
+entrypoints Program ;
+Program.   Program ::= [ Stmt ] ;
+
+-- statements ----------------------------------------------
+
+Block.     Block ::= "{" [Stmt] "}" ;
+separator  Stmt ";" ;
+BStmt.     Stmt ::= Block ;
+Decl.      Stmt ::= Type Item ;
+NoInit.    Item ::= Ident ; 
+Init.      Item ::= Ident "=" Expr ;
+
+separator nonempty Item "," ;
+
+Ass.       Stmt ::= Ident "=" Expr ;
+-- StructAss. Stmt ::= Ident "." Fields "=" Expr ;
+Ret.       Stmt ::= "return" Expr ;
+VRet.      Stmt ::= "return" ;
+
+Cond.      Stmt ::= "if" Expr "then" Block ;
+CondElse.  Stmt ::= "if" Expr "then" Block "else" Block ;
+While.     Stmt ::= "while" Expr "do" Stmt ;
+
+For.       Stmt ::= "for" Ident "from" Expr "to" Expr "do" Stmt ;
+-- ForField.  Stmt ::= "for" Ident "." Fields "from" Expr "to" Expr "do" Stmt ;
+ForIn.     Stmt ::= "for" Ident "in" Expr "do" Stmt ;
+-- ForInField.Stmt ::= "for" Ident "." Fields "in" Expr "do" Stmt ;
+Print.     Stmt ::= "print" Expr ;
+SFormat.   Stmt ::= "format" String [Expr] ;
+SExp.      Stmt ::= Expr ;
+FnDef.	   Stmt ::= "function" Ident "(" [Arg] ")" "->" Type Block ;
+Arg. 	   Arg ::= Type Ident;
+RefArg.	   Arg ::= "ref" Type Ident;
+separator  Arg "," ;
+
+separator  Ident "," ;
+
+-- List operations -----------------------------------------
+ListPush.  Stmt ::= Ident "." "push" Expr ;
+ListLength.Expr5 ::= Expr6 "::" "length" ;
+ListAt.    Expr5 ::= Expr6 "::" "at" Expr6 ;
+
+-- Structs -------------------------------------------------
+
+-- StructDef. Stmt ::= "struct" Ident "{" [StructItem] "}" ;
+-- StructItem. StructItem ::= Type Ident ;
+-- separator StructItem ";" ;
+
+-- Types ---------------------------------------------------
+
+TInt.       Type ::= "int" ;
+TBool.      Type ::= "bool" ;
+TString.    Type ::= "string" ;
+Void.       Type ::= "void" ;
+TList.      Type ::= "List" "<" Type ">" ;
+AnonFun.    Type ::= "Fun" "<" Type "(" [TypeOrRef] ")" ">" ;
+-- TStruct.    Type ::= "struct" Ident ;
+
+separator  Type "," ;
+
+TypeOrRefType. TypeOrRef ::= Type ;
+TypeOrRefRef.  TypeOrRef ::= "ref" Type ;
+separator      TypeOrRef "," ;
+
+-- Expressions ---------------------------------------------
+
+ELambda.      Expr7 ::= "[" [Ident] "]" "(" [Arg] ")" "->" Type Block ;
+-- ELambdaVoid.  Expr7 ::= "[" [Ident] "]" "(" [Arg] ")" Block ;
+ELitInt.      Expr7 ::= Integer ;
+EVar.         Expr7 ::= Ident ;
+ELitTrue.     Expr7 ::= "true" ;
+ELitFalse.    Expr7 ::= "false" ;
+-- EAnonStruct.  Expr7 ::= "new" "Struct";
+EEmptyList.   Expr7 ::= Type "[]" ;
+EString.      Expr7 ::= String;
+EApp.         Expr6 ::= Expr6 "(" [ExprOrRef] ")" ;
+-- EStructField. Expr6 ::= Ident "." Fields ;
+-- EStructField2. Expr6 ::= Expr6 "." Fields ;
+
+-- Field.        Fields ::= Ident ;
+-- Fields.       Fields ::= Ident "." Fields ;
+
+Neg.       Expr5 ::= "-" Expr6 ;
+Not.       Expr5 ::= "not" Expr6 ;
+
+EMul.      Expr4 ::= Expr4 MulOp Expr5 ;
+
+EAdd.      Expr3 ::= Expr3 AddOp Expr4 ;
+
+ERel.      Expr2 ::= Expr2 RelOp Expr3 ;
+
+EAnd.      Expr1 ::= Expr2 "and" Expr1 ;
+
+EOr.       Expr ::= Expr1 "or" Expr ;
+
+coercions  Expr 7 ;
+
+separator  Expr "," ;
+
+ERExpr.	   ExprOrRef ::= Expr ;
+ERRef.	   ExprOrRef ::= "ref" Ident ;
+separator  ExprOrRef "," ;
+
+
+-- operators -----------------------------------------------
+
+Plus.      AddOp ::= "+" ;
+Minus.     AddOp ::= "-" ;
+Times.     MulOp ::= "*" ;
+Div.       MulOp ::= "/" ;
+Mod.       MulOp ::= "%" ;
+LTH.       RelOp ::= "<" ;
+LE.        RelOp ::= "<=" ;
+GTH.       RelOp ::= ">" ;
+GE.        RelOp ::= ">=" ;
+EQU.       RelOp ::= "==" ;
+NE.        RelOp ::= "!=" ;
+
+-- comments ------------------------------------------------
+
+comment    "//" ;
+comment    "/*" "*/" ;
