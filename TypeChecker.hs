@@ -171,12 +171,25 @@ module TypeChecker where
         env <- ask
         return (env, Nothing)
 
+    -- Type -> Is Initialized -> Is Valid
+    isValidVarType :: Type -> Bool -> TT Bool
+    isValidVarType TInt _ = return True
+    isValidVarType TBool _ = return True
+    isValidVarType TString _ = return True
+    isValidVarType TList {} _ = return True
+    isValidVarType AnonFun {} isInitialized = return isInitialized
+    isValidVarType _ _ = return False
+
     typeCheck :: Stmt -> TT (TTEnv, TTReturnResult)
     typeCheck (Decl typ (NoInit (Ident i))) = do
+        isValid <- isValidVarType typ False
+        unless isValid $ throwError $ InvalidTypeInDeclarationException typ
         env <- ask
         return (Map.insert i typ env, Nothing)
 
     typeCheck (Decl typ (Init (Ident i) e)) = do
+        isValid <- isValidVarType typ True
+        unless isValid $ throwError $ InvalidTypeInDeclarationException typ
         ensureTypeExpr e typ
         env <- ask
         return (Map.insert i typ env, Nothing)

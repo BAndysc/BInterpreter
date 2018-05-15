@@ -61,7 +61,7 @@ module Types where
     -- tuple, State ("memory"), next free location and interpreter mode
     type MyStore = (MyState, Loc, InterpreterMode)
 
-    data TypeCheckExceptions = NotAListException Type | TypeCheckException Type Type | FuncApplicationException | NonexistingIdentifierException String | ReturnTypeMismatchException (Maybe Type) (Maybe Type)  deriving Show
+    data TypeCheckExceptions = InvalidTypeInDeclarationException Type | NotAListException Type | TypeCheckException Type Type | FuncApplicationException | NonexistingIdentifierException String | ReturnTypeMismatchException (Maybe Type) (Maybe Type)  deriving Show
 
     data RuntimeExceptions = DivisionByZeroException | ModulusByZeroException | NoReturnException | NoStructFieldException String | OutOfRangeExeption Integer deriving Show
 

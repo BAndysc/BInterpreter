@@ -32,6 +32,7 @@ module Main where
                             NonexistingIdentifierException i -> exitWithError $ "Identifier " ++ i ++ " doesn't exist"
                             ReturnTypeMismatchException r1 r2 -> exitWithError $ "Return type mismatch: " ++ show r1 ++ " and " ++ show r2
                             NotAListException typ -> exitWithError $ show typ ++ " should be a List, but is not"
+                            InvalidTypeInDeclarationException typ -> exitWithError $ "Invalid use of type " ++ show typ ++ " in declaration"
                     Right _ -> do
                         runTimeResult <- runMyMonad program mode
                         case runTimeResult of

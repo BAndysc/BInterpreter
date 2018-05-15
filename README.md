@@ -17,6 +17,8 @@ Interpreter opiera się głównie na dwóch monadach: `State` i `Reader`. `Reade
 Interpreter wymaga biblioteki `mtl`, został przetestowany na wersjach ghc 7.6.3 oraz 8.0.2.
 
 ```
+	cabal update
+	cabal install mtl
     make
     ./interpreter
 ```
@@ -36,6 +38,14 @@ Funkcje anonimowe są typu: `Fun<[Typ zwracany]([lista typów przyjmowanych argu
 (W kolejnej wersji dostępne będą struktury, ich typ to `struct [IDENTYFIKATOR]`)
 
 Typowanie jest statyczne.
+
+##### Domyślne wartości typów przy inicjalizacji zmiennych:
+
+ * `int` -> `0`
+ * `bool` -> `false`
+ * `string` -> `""`
+ * `List` -> `[]`
+ * `Fun` -> brak (niedopuszczalna deklaracja zmiennej na funkcję bez funkcji)
 
 ### Arytmetyka
 
